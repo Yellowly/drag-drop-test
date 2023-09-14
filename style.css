@@ -16,6 +16,13 @@ h2 {
     min-height: 0px;
     display: inline-block;
 }
+
+h1 {
+    color: #f1eeed;
+    position: relative;
+    min-height: 0px;
+    display: inline-block;
+}
 .droptarget {
     width: 100%; 
     min-height:128px;

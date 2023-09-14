@@ -539,7 +539,7 @@ async function __wbg_init(input) {
     if (wasm !== undefined) return wasm;
 
     if (typeof input === 'undefined') {
-        input = new URL('drag-drop-test-2efddfb8bfee7526_bg.wasm', import.meta.url);
+        input = new URL('drag-drop-test-77d2b0dac6382e1b_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
