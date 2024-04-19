@@ -4,6 +4,7 @@ body {
     padding: 0;
     text-align: center;
     background-color: #2c2a29;
+    font-family: monospace;
 }
 
 hr{
@@ -68,25 +69,28 @@ button{
     color:#bbb;
     background-color: #333;
     border-radius:5px;
-    height:90%;
-    font-size: medium;
+    height:2rem;
+    font-size: large;
+    font-family: monospace;
 }
 button:hover{
     background-color: #555;
 }
 .change-image-section{
-    height:60px;
+    height:fit-content;
+    margin-bottom:24px;
 }
 
 .add-image-links{
-    height:60%;
-    font-size: medium;
+    height:2rem;
+    font-size: large;
     background-color:#333;
     width: 50%;
     margin:8px;
     border: solid #333;
     border-radius:3px;
     color:#bbb;
+    font-family: monospace;
 }
 .add-image-links:focus{
     border: solid #444;
@@ -95,5 +99,10 @@ button:hover{
 }
 .smaller-button{
     margin:5px;
-    height:60%;
+    height:2rem;
+}
+
+#tierlist{
+    background-color: #2c2a29;
+    height:fit-content;
 }

@@ -1,8 +1,8 @@
+use web_sys::js_sys::Function;
 use yew::prelude::*;
-use web_sys::{HtmlInputElement, HtmlCanvasElement, CanvasRenderingContext2d, DragEvent, DataTransfer, Element, Url, Document};
+// use yew_hooks::prelude::*;
+use web_sys::{window, ClipboardEvent, DataTransfer, Document, DragEvent, Element, HtmlInputElement, Url};
 use wasm_bindgen::{JsCast, JsValue};
-use std::fs;
-use std::io::{BufWriter, Write};
 
 
 fn main() {
@@ -33,6 +33,8 @@ pub enum Msg {
     AddingImages(String),
     NewColumn,
     DelLastColumn,
+    Screenshot,
+    PasteImage(ClipboardEvent),
     None
 }
 
@@ -41,7 +43,9 @@ struct RootComponent{
     images: Vec<String>,
     drag_start_loc: Option<(usize, usize)>,
     drag_image: Option<usize>,
-    textbox_content: String
+    textbox_content: String,
+    screenshot_func: Function,
+    test_stuff: String
 }
 
 impl Component for RootComponent {
@@ -57,9 +61,18 @@ impl Component for RootComponent {
         for (img_idx, name) in images.iter().enumerate(){
             content[layers-1].push(img_idx);
         }
-
+        let jsfunc = "let div =
+                document.getElementById('tierlist');
+                window.scrollTo(0,0);
+                html2canvas(div).then(
+                function (canvas) {
+                    canvas.toBlob(function(blob) { 
+                        const item = new ClipboardItem({ \"image/png\": blob });
+                        navigator.clipboard.write([item]); 
+                    });
+                })";
         //let images: Vec<String> = vec![String::from("Images/marko.png"),String::from("Images/marko.png",String::from("Images/marko.png",String::from("Images/marko.png",String::from("Images/marko.png"]
-        RootComponent { content, images, drag_start_loc: None, drag_image: None, textbox_content: String::new()}
+        RootComponent { content, images, drag_start_loc: None, drag_image: None, textbox_content: String::new(), test_stuff:String::new(), screenshot_func: Function::new_no_args(jsfunc)}
     }
 
     // Some details omitted. Explore the examples to get more.
@@ -147,6 +160,28 @@ impl Component for RootComponent {
             Msg::DelLastColumn => {
                 self.content.pop();
             }
+            Msg::Screenshot => {
+                let _ = self.screenshot_func.call0(&window().unwrap());
+            }
+            Msg::PasteImage(e) => {
+                let clipboard_item = match(e.clipboard_data()){
+                    Some(d) => d.files().unwrap().item(0),
+                    None => None
+                };
+                match clipboard_item{
+                    Some(itm) => {
+                        if itm.type_().starts_with("image"){
+                            let imgsrc = Url::create_object_url_with_blob(&itm).unwrap();
+                            self.images.push(imgsrc);
+                            let content_len = self.content.len();
+                            self.content[content_len-1].push(self.images.len()-1);
+                        }
+                    }
+                    None => ()
+                };
+                // self.textbox_content=e.type_();
+                // self.test_stuff= e.clipboard_data().unwrap().files().unwrap().item(0).unwrap().type_();
+            }
         }
         true
     }
@@ -154,8 +189,6 @@ impl Component for RootComponent {
         let link = ctx.link();
         html!{
             <>
-                <input type={"text"} class={"inputname"} value={"Name"}/>
-                <hr/>
                 /*
                 <div class={"droptarget"} ondrop={link.callback(|e| Msg::DoDrop(e))} ondragover={link.callback(|e| Msg::AllowDrop(e))}>
                     <img ondragstart={link.callback(|e| Msg::DragStart(e))} ondrag={link.callback(|e| Msg::Drag(e))} draggable="true" src="Images/marko.png" alt="Marko" width=128 height=128/>
@@ -168,6 +201,9 @@ impl Component for RootComponent {
                 //self.images.iter().enumerate().map(|(i,s)|{
                 //    html!{<p>{s.clone()}</p>}
                 //}).collect::<Html>()}
+                <div id="tierlist">
+                <input type={"text"} class={"inputname"} placeholder="Insert Name"/>
+                <hr/>
                 {
                     self.content.iter().enumerate().map(|(i,r)|{
                         html!{
@@ -188,16 +224,19 @@ impl Component for RootComponent {
                         }
                     }).collect::<Html>()
                 }
+                </div>
                 <hr/>
                 <div class="change-image-section">
-                <button class="smaller-button" onclick={link.callback(|_| Msg::NewColumn)}>{"Add Column"}</button>
-                <button class="smaller-button" onclick={link.callback(|_| Msg::DelLastColumn)}>{"Remove Column"}</button>
-                <p>{"If you want to use your own images, clear all images then copy paste image links into box below (can either be added seperately or a space-separated list of links)"}</p>
+                <button class="smaller-button" onclick={link.callback(|_| Msg::Screenshot)}>{"Take Screenshot"}</button>
+
+                <button class="smaller-button" onclick={link.callback(|_| Msg::NewColumn)}>{"Add Row"}</button>
+                <button class="smaller-button" onclick={link.callback(|_| Msg::DelLastColumn)}>{"Remove Row"}</button>
+                <br/>
+                // <p>{"If you want to use your own images, clear all images then copy paste images or image links into box below (can either be added seperately or a space-separated list of links)"}</p>
                     <button onclick={link.callback(|_| Msg::ResetImages)}>{"Clear Images"}</button>
-                    <input class="add-image-links" type="text" value={self.textbox_content.clone()} oninput={link.callback(|event: InputEvent| {let input: HtmlInputElement = event.target_unchecked_into(); Msg::AddingImages(input.value())})} onkeypress={link.callback(|key:KeyboardEvent| {if key.char_code()==13 {Msg::AddImages} else{Msg::None}})}/>
+                    <input class="add-image-links" type="text" value={self.textbox_content.clone()} oninput={link.callback(|event: InputEvent| {let input: HtmlInputElement = event.target_unchecked_into(); Msg::AddingImages(input.value())})} onkeypress={link.callback(|key:KeyboardEvent| {if key.char_code()==13 {Msg::AddImages} else{Msg::None}})} onpaste={link.callback(|e: Event| Msg::PasteImage(e.unchecked_into::<ClipboardEvent>()))} placeholder="paste image or image link"/>
                     <button onclick={link.callback(|_| Msg::AddImages)}>{"Add Images"}</button>
                 </div>
-                // <p>{web_sys::f}</p>
             </>
         }
     }

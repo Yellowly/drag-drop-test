@@ -19,7 +19,7 @@ Images\leo.png
 Images\lucas.png
 Images\marcus.png
 Images\marko.png
-Images\max.png
+Images\max2.png
 Images\nash.png
 Images\nick.png
 Images\peter.png
@@ -30,3 +30,9 @@ Images\seb.png
 Images\simon.png
 Images\smith.png
 Images\tynan.png
+Images\gabe.png
+Images\avery.png
+Images\lex.png
+Images\hanna.png
+Images\max1.png
+Images\owen.png
