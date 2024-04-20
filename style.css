@@ -35,7 +35,21 @@ h1 {
     padding: 0px;
     border: 1px solid black;
     text-align: left;
-  }
+}
+
+img{
+    width: 128px;
+    height:128px;
+}
+@media only screen and (max-width: 40.625rem) {
+    img{
+        width:72px;
+        height: 72px;
+    }
+    .droptarget {
+        min-height:72px;
+    }
+}
 
 .inputname{
     width: 99%;
