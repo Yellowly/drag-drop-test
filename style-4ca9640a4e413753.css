@@ -1,0 +1,122 @@
+html,
+body {
+    margin: 10px;
+    padding: 0;
+    text-align: center;
+    background-color: #2c2a29;
+    font-family: monospace;
+}
+
+hr{
+    border:none;
+    background-color: #111;
+}
+
+p {
+    color: #aaa;
+}
+
+h2 {
+    color: #f1eeed;
+    position: relative;
+    min-height: 0px;
+    display: inline-block;
+}
+
+h1 {
+    color: #f1eeed;
+    position: relative;
+    min-height: 0px;
+    display: inline-block;
+}
+.droptarget {
+    width: 100%; 
+    min-height:128px;
+    padding: 0px;
+    border: 1px solid black;
+    text-align: left;
+}
+
+img{
+    width: 128px;
+    height:128px;
+}
+@media only screen and (max-width: 40.625rem) {
+    img{
+        width:72px;
+        height: 72px;
+    }
+    .droptarget {
+        min-height:72px;
+    }
+}
+
+.inputname{
+    width: 99%;
+    height:fit-content;
+    font-size: 32px;
+    border: none;
+    background-color:transparent;
+    color: #f1eeed;
+    font-weight: bolder;
+    text-align:center;
+    outline:none;
+}
+
+.inputname:focus{
+    background-color: transparent;
+    border:none;
+    outline:none;
+}
+
+.no-touch-move{
+    touch-action:none;
+}
+
+.touch-selected{
+    border: 2px solid white;
+    box-sizing: border-box;
+}
+
+button{
+    border:none;
+    color:#bbb;
+    background-color: #333;
+    border-radius:5px;
+    height:2rem;
+    font-size: large;
+    font-family: monospace;
+}
+button:hover{
+    background-color: #555;
+}
+.change-image-section{
+    height:fit-content;
+    margin-bottom:24px;
+}
+
+.add-image-links{
+    height:2rem;
+    font-size: large;
+    background-color:#333;
+    width: 50%;
+    margin:8px;
+    border: solid #333;
+    border-radius:3px;
+    color:#bbb;
+    font-family: monospace;
+}
+.add-image-links:focus{
+    border: solid #444;
+    border-radius:3px;
+    outline:none;
+}
+.smaller-button{
+    margin:5px;
+    height:2rem;
+}
+
+#tierlist{
+    background-color: #2c2a29;
+    height:fit-content;
+}
